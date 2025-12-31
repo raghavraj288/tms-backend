@@ -86,7 +86,8 @@ export const resolvers = {
       const cookieOptions = { 
         httpOnly: true, 
         secure: process.env.NODE_ENV === 'production', 
-        sameSite: 'none' as const 
+        sameSite: 'none' as const,
+        path: '/',
       };
 
       res.cookie('access_token', accessToken, { ...cookieOptions, maxAge: 15 * 60 * 1000 });
