@@ -96,14 +96,33 @@ export const resolvers = {
       return user;
     },
 
+    // logout: async (_: any, __: any, { user, res }: Context) => {
+    //   if (user) {
+    //     await prisma.user.update({ where: { id: user.id }, data: { refreshToken: null } });
+    //   }
+    //   res.clearCookie('access_token');
+    //   res.clearCookie('refresh_token');
+    //   return true;
+    // },
+
     logout: async (_: any, __: any, { user, res }: Context) => {
-      if (user) {
-        await prisma.user.update({ where: { id: user.id }, data: { refreshToken: null } });
-      }
-      res.clearCookie('access_token');
-      res.clearCookie('refresh_token');
-      return true;
-    },
+  if (user) {
+    await prisma.user.update({ where: { id: user.id }, data: { refreshToken: null } });
+  }
+
+  // Define the same options used during login
+  const cookieOptions = {
+    httpOnly: true,
+    secure: true,      // Must match login
+    sameSite: 'none' as const, // Must match login
+    path: '/'          // Ensure path matches
+  };
+
+  res.clearCookie('access_token', cookieOptions);
+  res.clearCookie('refresh_token', cookieOptions);
+  
+  return true;
+},
 
     createEmployee: async (_: any, { email, password }: any, { user }: Context) => {
       assertIsAdmin(user);
