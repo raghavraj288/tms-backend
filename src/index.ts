@@ -13,13 +13,16 @@ import { ErrorCode } from './errors.js';
 const schema = makeExecutableSchema({ typeDefs, resolvers });
 const app = express();
 
+app.set('trust proxy', 1); 
+
 app.use(cors({ 
-  origin: process.env.FRONTEND_URL || true, 
+  origin: "https://thriving-melba-7fc957.netlify.app",
   credentials: true 
 }));
-
 app.use(cookieParser());
 app.use(express.json());
+
+app.options('*', cors());
 
 app.post('/refresh_token', async (req, res) => {
   const token = req.cookies.refresh_token;
@@ -43,7 +46,7 @@ app.post('/refresh_token', async (req, res) => {
     
     res.cookie('access_token', accessToken, { 
       httpOnly: true, 
-      secure: process.env.NODE_ENV === 'production', 
+      secure: true, 
       sameSite: 'none', 
       maxAge: 15 * 60 * 1000 
     });
@@ -61,6 +64,8 @@ app.all('/graphql', createHandler({
   context: async (req) => {
     const rawReq = req.raw as any; 
     const rawRes = (req as any).raw.res; 
+
+    console.log("Incoming Cookies:", rawReq.cookies);
 
     const token = rawReq.cookies?.access_token;
     let user = null;
