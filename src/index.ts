@@ -16,13 +16,14 @@ const app = express();
 app.set('trust proxy', 1); 
 
 app.use(cors({ 
-  origin: "https://thriving-melba-7fc957.netlify.app",
+  origin: "https://thriving-melba-7fc957.netlify.app", 
   credentials: true 
 }));
+
 app.use(cookieParser());
 app.use(express.json());
 
-app.options('*', cors());
+app.options('(.*)', cors());
 
 app.post('/refresh_token', async (req, res) => {
   const token = req.cookies.refresh_token;
