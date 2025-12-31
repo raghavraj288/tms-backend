@@ -1,0 +1,38 @@
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  ADMIN
+  EMPLOYEE
+}
+
+enum Status {
+  PENDING
+  IN_TRANSIT
+  DELIVERED
+}
+
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  password     String
+  role         Role     @default(EMPLOYEE)
+  refreshToken String?  @db.Text
+}
+
+model Shipment {
+  id          String   @id @default(uuid())
+  trackingId  String   @unique
+  origin      String
+  destination String
+  status      Status   @default(PENDING)
+  weight      Float
+  details     String?
+  createdAt   DateTime @default(now())
+}
