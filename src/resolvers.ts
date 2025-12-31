@@ -85,7 +85,7 @@ export const resolvers = {
 
       const cookieOptions = { 
         httpOnly: true, 
-        secure: process.env.NODE_ENV === 'production', 
+        secure: true, 
         sameSite: 'none' as const,
         path: '/',
       };
