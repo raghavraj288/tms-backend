@@ -23,7 +23,6 @@ app.use(cors({
 app.use(cookieParser());
 app.use(express.json());
 
-app.options('(.*)', cors());
 
 app.post('/refresh_token', async (req, res) => {
   const token = req.cookies.refresh_token;
